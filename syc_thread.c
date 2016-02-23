@@ -4,7 +4,6 @@
 #include<stdlib.h>
 #include<string.h>
 #include "syc_scp.h"
-//test
 char *project_path = "/home/ck/workspace/syc_project_file/projects/";
 char *target_project_path="/data/apache-tomcat-7.0.62/webapps/";
 struct send_file *send_file_head=NULL,*send_file_p=NULL;
