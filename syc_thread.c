@@ -4,8 +4,12 @@
 #include<stdlib.h>
 #include<string.h>
 #include "syc_scp.h"
+#include "strtool.h"
+
 char *project_path = "/home/ck/workspace/syc_project_file/projects/";
 char *target_project_path="/data/apache-tomcat-7.0.62/webapps/";
+char *project_name ="HMS";
+char *target_project_path_name = "/data/apache-tomcat-7.0.62/webapps/HMS";
 struct send_file *send_file_head=NULL,*send_file_p=NULL;
 int project_path_len;
 
@@ -109,9 +113,27 @@ int check_newfile(char *localfile,struct target_filepath_list *targetfilelist){
 	}
 }
 
+
 int main(int argc,char *argv[]){
         printf("=====================================remote check start=================================\n");
-        syc_remote_check();
+        struct ssh_host *host = malloc(sizeof(struct ssh_host));
+        host->hostname="101.200.178.6";
+        host->username="root";
+        host->password="7RX3KhCLgq";
+        //char *cmd1 = "cd /data/apache-tomcat-7.0.62/webapps/ && find HMS -type f -print0 | xargs -0 md5sum > /data/HMS.md5";
+        //char *cmd2 = "cat /data/HMS.md5";
+        //char *commandline[2]={"cd /data/apache-tomcat-7.0.62/webapps/ && find HMS -type f -print0 | xargs -0 md5sum > /data/HMS.md5","cat /data/HMS.md5"};
+        char *cmd1 = "cd TARGET_PROJECT_PATH && find PROJECT_NAME -type f -print0 | xargs -0 md5sum > TARGET_PROJECT_PATH_NAME.md5";
+        char *cmd2 = "cat TARGET_PROJECT_PATH_NAME.md5";
+        char *commandline[2];
+        commandline[0] = replace_p(cmd1,"TARGET_PROJECT_PATH_NAME",target_project_path_name);
+        commandline[0] = replace_p(commandline[0],"TARGET_PROJECT_PATH",target_project_path);
+        commandline[0] = replace_p(commandline[0],"PROJECT_NAME",project_name);
+        printf("command:%s\n",commandline[0]);
+        commandline[1] = replace_p(cmd2,"TARGET_PROJECT_PATH_NAME",target_project_path_name);
+        printf("cmd 1:%s\n",commandline[0]);
+        printf("cmd 2:%s\n",commandline[1]);
+        syc_remote_check(host,commandline);
         printf("=====================================remote check end===================================\n");
 	project_path_len = strlen(project_path);
 	FILE *fstream,*result; 

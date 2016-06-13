@@ -43,12 +43,11 @@ static int waitsocket(int socket_fd, LIBSSH2_SESSION *session)
     return rc;
 }
  
-int syc_remote_check()
+int syc_remote_check(struct ssh_host *host,char* commandline[])
 {
-    const char *hostname = "101.200.178.6";
-    char* commandline[2] = {"cd /data/apache-tomcat-7.0.62/webapps/ && find HMS -type f -print0 | xargs -0 md5sum > /data/HMS.md5","cat /data/HMS.md5"};
-    const char *username    = "root";
-    const char *password    = "7RX3KhCLgq";
+    const char *hostname = host->hostname;
+    const char *username    = host->username;
+    const char *password    = host->password;
     unsigned long hostaddr;
     int sock;
     struct sockaddr_in sin;
